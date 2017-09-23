@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        img {
+            width: 100px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<img src="xn.png" alt="" id="xn"/>
+</body>
+<script>
+    var oImg = document.getElementById('xn');
+    //在图片上按下鼠标
+    oImg.onmousedown = function (ev) {
+        ev = ev || event;
+        //标准浏览器下阻止默认行为
+        if (ev.preventDefault) {
+            ev.preventDefault();
+        }
+        //短路写法
+        ev.returnValue && (ev.returnValue = false);
+        //获取固定距离
+        var disX = ev.clientX - this.offsetLeft;
+        var disY = ev.clientY - this.offsetTop;
+        //鼠标移动 图片跟着动
+        document.onmousemove = function (ev) {
+            ev = ev || event;
+            oImg.style.left = ev.clientX - disX +'px';
+            oImg.style.top = ev.clientY - disY +'px';
+        };
+        document.onmouseup = function () {
+            document.onmousemove = null;
+        }
+
+    }
+
+
+</script>
+</html>

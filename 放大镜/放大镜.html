@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+        }
+        #box1 {
+            width: 240px;
+            height: 144px;
+            position: relative;
+            left: 100px;
+            top: 110px;
+        }
+
+        #small {
+            position: absolute;
+            return:false;
+        }
+
+        #box2 {
+            width: 51px;
+            height: 66px;
+            position: absolute;
+            left: 0;
+            /*right: 0;*/
+            top: 0;
+            background: url(bj.png) repeat;
+            cursor: pointer;
+            /*display: none;*/
+        }
+
+        #div1 {
+            width: 204px;
+            height: 264px;
+            position: absolute;
+            left: 400px;
+            top: 0;
+            /*border: 1px solid red;*/
+            background: url(big.jpg) no-repeat;
+            /*background-position: 0 0;*/
+            display: none;
+
+        }
+    </style>
+</head>
+<body>
+<div id="box1">
+    <img src="small.png" alt="" id="small"/>
+
+    <div id="box2"></div>
+</div>
+<div id="div1">
+
+</div>
+
+</body>
+<script>
+    //获取相关元素
+    var oBox1 = document.getElementById('box1');
+    var oBox2 = document.getElementById('box2');
+    var oDiv1 = document.getElementById('div1');
+    //鼠标按下
+    oBox2.onmousedown = function (ev) {
+        ev = ev || event;
+        //取消事件冒泡
+        ev.cancelBubble = true;
+        //
+        if (ev.preventDefault) {
+            ev.preventDefault();
+        }
+        ev.returnValue && (ev.returnValue = false);
+        oBox2.setCapture && oBox2.setCapture();
+        //鼠标按下 显示大图
+        oDiv1.style.display = 'block';
+        //
+        var disX = ev.clientX - this.offsetLeft;
+        var disY = ev.clientY - this.offsetTop;
+        //鼠标移动
+        oBox1.onmousemove = function (ev) {
+            ev = ev || event;
+            oBox2.style.left = ev.clientX - disX + 'px';
+            oBox2.style.top = ev.clientY - disY + 'px';
+            //
+//            var xx = oBox1.style.left;
+//            var yy = oBox1.style.top;
+            //
+//            console.log(ev.clientX);
+//            if(ev.clientX < parseFloat(xx) || ev.clientX >){
+//                oDiv1.style.display = 'none';
+//            }
+            //
+            var x = parseInt(oBox2.style.left);
+            var y = parseInt(oBox2.style.top);
+
+             //鼠标移动 大图跟着动
+            oDiv1.style.backgroundPositionX = -x * 4 + 'px';
+            oDiv1.style.backgroundPositionY = -y * 4 + 'px';
+                   //console.log(-x * 4 + 'px');
+            //限制范围
+            if (oBox2.offsetLeft <= 0) {
+                oBox2.style.left = 0;
+                oDiv1.style.backgroundPositionX = 0;
+            }
+            if (oBox2.offsetLeft >= oBox1.offsetWidth - oBox2.offsetWidth) {
+                oBox2.style.left = oBox1.offsetWidth - oBox2.offsetWidth + 'px';
+                oDiv1.style.backgroundPositionX = -756 + 'px';
+            }
+            if (oBox2.offsetTop <= 0) {
+                oBox2.style.top = 0;
+                oDiv1.style.backgroundPositionY = 0;
+            }
+            if (oBox2.offsetTop >= oBox1.offsetHeight - oBox2.offsetHeight) {
+                oBox2.style.top = oBox1.offsetHeight - oBox2.offsetHeight + 'px';
+                oDiv1.style.backgroundPositionY = -311 + 'px';
+            }
+        };
+
+        //鼠标弹起
+        oBox1.onmouseup = function () {
+            oDiv1.style.display = 'none';
+            oBox1.onmousemove = null;
+            oBox2.releaseCapture && oBox2.releaseCapture();
+        };
+
+
+    };
+    //鼠标离开后，单击
+    document.onmouseup= function () {
+        oDiv1.style.display = 'none';
+    }
+
+
+
+</script>
+</html>
